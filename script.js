@@ -59,17 +59,51 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // Contact form
-function handleSubmit(e) {
+const API_URL = 'https://school-website-api.onrender.com';
+
+async function handleSubmit(e) {
   e.preventDefault();
   const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
   const success = document.getElementById('formSuccess');
-  form.style.display = 'none';
-  success.style.display = 'block';
-  setTimeout(() => {
-    form.reset();
-    form.style.display = 'block';
-    success.style.display = 'none';
-  }, 4000);
+
+  const inputs = form.querySelectorAll('input, textarea');
+  const [nameEl, emailEl, subjectEl, messageEl] = inputs;
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังส่ง...';
+
+  try {
+    const res = await fetch(`${API_URL}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: nameEl.value,
+        email: emailEl.value,
+        subject: subjectEl.value,
+        message: messageEl.value
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+      setTimeout(() => {
+        form.reset();
+        form.style.display = 'block';
+        success.style.display = 'none';
+      }, 4000);
+    } else {
+      alert(data.error || 'ไม่สามารถส่งข้อความได้ กรุณาลองใหม่อีกครั้ง');
+    }
+  } catch (err) {
+    alert('เกิดข้อผิดพลาด กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ส่งข้อความ';
+  }
 }
 
 // Back to top
