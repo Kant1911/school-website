@@ -282,7 +282,7 @@ img { max-width:100%; }
 .small-news p { font-size:.85rem; color:var(--gray-600); margin-bottom:10px; }
 
 /* ===== CONTACT ===== */
-.contact-grid { display:grid; grid-template-columns:1fr 1.2fr; gap:40px; align-items:start; }
+.contact-grid { display:grid; grid-template-columns:1fr; gap:40px; align-items:start; max-width:600px; margin:0 auto; }
 .contact-item { display:flex; align-items:flex-start; gap:16px; margin-bottom:26px; }
 .contact-icon {
   width:44px; height:44px; border-radius:12px; flex-shrink:0;
