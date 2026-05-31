@@ -59,7 +59,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // Contact form
-const API_URL = 'https://school-website-api.onrender.com';
+const API_URL = 'https://school-website-7j6j.onrender.com';
 
 async function handleSubmit(e) {
   e.preventDefault();
