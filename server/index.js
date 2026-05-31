@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.use(express.json());
 app.use(cors({
@@ -15,14 +17,6 @@ app.use(cors({
     'http://localhost:3000'
   ]
 }));
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'School Website API is running' });
@@ -41,9 +35,9 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    await transporter.sendMail({
-      from: `"${name}" <${process.env.EMAIL_USER}>`,
-      to: process.env.RECEIVE_EMAIL || process.env.EMAIL_USER,
+    await sgMail.send({
+      from: process.env.SENDER_EMAIL,
+      to: process.env.RECEIVE_EMAIL,
       replyTo: email,
       subject: `[ติดต่อโรงเรียน] ${subject}`,
       html: `
